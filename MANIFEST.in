@@ -1,0 +1,4 @@
+include CODEOWNERS
+include LICENSE
+global-exclude *.pyc
+global-exclude de440.bsp
