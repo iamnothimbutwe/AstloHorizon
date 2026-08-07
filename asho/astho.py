@@ -9,11 +9,39 @@ import math
 from collections.abc import Iterable
 from importlib import resources
 import time as ti
+import sys
 
 console = Console()
 
 try:
-    from astlo import Vectors,Contin
+    #import astlo
+    from astlo import Vectors,Contin,__version__
+    from packaging import version
+
+    required_version = version.parse("v10.350.500")
+    installed_version = version.parse(__version__)
+
+    if installed_version < required_version:
+        print("\n❌🚫 ERROR: AstloHorizons requires astlo >= v10.350.500")
+        print(f"   You have astlo {__version__} installed.")
+        print("   Please upgrade with:   pip install ¦new .whl file¦ the .whl files are available in the releases section of the public repo to astlo")
+        print("   Then try installing AstloHorizons again.\n")
+        sys.exit(1)
+ 
+except ImportError as r:
+    print("\n❌🚫 ERROR: AstloHorizons requires astlo to be installed first.")
+    print("   Please install astlo with: astlo>=v10.350.500 from the public repo to astlo")
+    print("   Then try installing AstloHorizons again.\n")
+    print(f'{r}')
+    sys.exit(1)
+
+#except Exception as e:
+    # Fallback in case packaging module is missing
+ #   print(f"\n⚠️ 🚫  Warning: Could not verify astlo version ({e})")
+  #  print("   Continuing anyway...\n")
+    #pass
+
+
 
 except ModuleNotFoundError:
     raise ModuleNotFoundError('Astlo is required to run. Please install then try again') #what if the program is already installed but the required version  for astlo is not met.

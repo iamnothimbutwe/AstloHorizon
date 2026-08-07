@@ -1,0 +1,30 @@
+Metadata-Version: 2.4
+Name: astlohorizons
+Version: 0.1.1
+Summary: an optional plugin for astlo that utilizes ephemeris data from NASA-JPL spice kernels. its function is to help astlo track  moons and stars.
+Home-page: https://github.com/iamnothimbutwe/AstloHorizons
+Author: maxharia/@iamnothimbutwe Github and Gitlab
+License: Copyright (c). All rights reserved
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: COPYRIGHT
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering :: Astronomy :: Astrophysics
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: rich
+Requires-Dist: astlo>=v10.350.500
+Requires-Dist: click
+Requires-Dist: skyfield
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# AstloHorizon
