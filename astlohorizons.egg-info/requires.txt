@@ -1,4 +1,0 @@
-rich
-astlo>=v10.350.500
-click
-skyfield
