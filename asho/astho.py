@@ -209,9 +209,32 @@ class Asho:
 
         ls_earth_emb_vel = [astroearth_rel_moon['vel_vect'][0]*1000,astroearth_rel_moon['vel_vect'][1]*1000,astroearth_rel_moon['vel_vect'][2]*1000] #will convert to meters once the conversion to geocent is done..did it
 
+
+
+
+
         #to get the moon state vectors relative earth center##geocentric
-        moon_geocenter_pos = vectors.sub_vect(ls_pos,ls_earth_emb_pos) #pos vorrwction to geocentric true
-        moon_geocenter_vel = vectors.sub_vect(ls_vel,ls_earth_emb_vel)
+        moon_ssb = self.skysolsys('moon')
+        earth_ssb = self.skysolsys('earth')
+
+        moon_ssb_lst_pos = []
+        moon_ssb_lst_vel = []
+        earth_lst_pos = []
+        earth_lst_vel = []
+
+        for _,idx in enumerate(moon_ssb['pos_vect']):
+            moon_ssb_lst_pos.append(idx*1000)
+            moon_ssb_lst_vel.append(moon_ssb['vel_vect'][_]*1000)
+            earth_lst_pos.append(earth_ssb['pos_vect'][_]*1000)
+            earth_lst_vel.append(earth_ssb['vel_vect'][_]*1000)
+
+
+        #WHY DID I MULTPLY WITH 1000 TO CONVERT TO m BUT WHY??
+
+      #  moon_geocentric_pos = vectors.magn_vect()
+
+        moon_geocenter_pos = vectors.sub_vect(moon_ssb_lst_pos,earth_lst_pos) #pos vorrwction to geocentric true
+        moon_geocenter_vel = vectors.sub_vect(moon_ssb_lst_vel,earth_lst_vel)
 ####i tried the correction the subtractions to get the states relatuve earths center geocenter but it still gives that 28° inclination...
 #eartgs equator is tilted 23° relative the ecliptic...so if i minus that 28 from 23 ill get 5°inclination for luna..
 

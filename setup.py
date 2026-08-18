@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'astlohorizons',
-    version = 'v0.1.1',
+    version = 'v0.1.100',
     packages=find_packages(),
     install_requires = ['rich','astlo>=v10.350.500','click','skyfield'],
     include_package_data = True,

@@ -14,7 +14,7 @@ Astlo the core engine does not pull any data from any external source.
 Astlo Space systems,r/kenyaspacenerds
 """
 
-__version__ = 'v0.1.1'
+__version__ = 'v0.1.100'
 __author__ = 'maxharia/@iamnothimbutwe Github and Gitlab/Macharia'
 
 

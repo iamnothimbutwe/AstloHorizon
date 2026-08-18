@@ -35,7 +35,7 @@ settings = settings_root / 'settings.txt'
 
 @click.group()
 @click.option('--reinfo','-re',default=None,help='giving a value to this will show the info tab')
-@click.version_option(version='v0.1.1\nAstloHorizons an optional plugin to astlo. Property of Astlo Space Systems and r/kenyaspacenerds.\nThe ephemeris part is an open source property of NASA-JPL.\nAll rights reserved.')
+@click.version_option(version='v0.1.100\nAstloHorizons an optional plugin to astlo. Property of Astlo Space Systems and r/kenyaspacenerds.\nThe ephemeris part is an open source property of NASA-JPL.\nAll rights reserved.')
 @click.pass_context
 def iam(ctx,reinfo=None):
    # if os.name=='nt':
@@ -200,7 +200,7 @@ def luna(ctx,override):
     print('\n\ncontinuing.../')
     print('\n\n')
 
-    console.print(f'''[yellow]The Earth-moon System relative the EMB - Earth-moon Barycenter[/yellow]\n[cyan]Name: [/cyan][bold white]{datluna['name']}[/bold white]\n[cyan]Time: [/cyan][bold white]{datluna['time']} ¦ Unix:{datluna['unix_time']} ¦ {datluna['unix_simple']}[/bold white]\n[cyan]Luna current distance relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_pos_vect_rel_EMB'])/1000} -km-[bold white]\n[cyan]Luna current velocity relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_vel_vect_rel_EMB'])/1000} -km/s-[/bold white]\n\n[yellow]Relative Earth true center -Geocenter- <This part needs to get fixed>: [/yellow]\n[cyan]Luna current distance relative Geocenter: [/cyan][bold white]vectors.magn_vect(datluna['moon_geo_pos_vect'])/1000 -km-[/bold white]\n[cyan]Luna current velocity relative Geocenter: [/cyan][bold white]vectors.magn_vect(datluna['moon_geo_vel_vect'])/1000 -km/s-[/bold white]\n\n[yellow]current 'Phase'° degrees -emphasis on phase- and illumination element k.[/yellow]\n[cyan]Phase: [/cyan][bold white]{datluna['phase_deg']}°[/bold white]\n[cyan]Illumination element k and percentage k%: [/cyan][bold white]{datluna['face']} ¦ {datluna['face_perc']}%[/bold white]\n\n[cyan]Current Face: [/cyan][bold white]{ctx.obj['asho'].lunaface()}\n\n\n\n[yellow]Access the osculating elements through the SDK part of astlohorizons class Asho[/yellow]''')
+    console.print(f'''[yellow]The Earth-moon System relative the EMB - Earth-moon Barycenter[/yellow]\n[cyan]Name: [/cyan][bold white]{datluna['name']}[/bold white]\n[cyan]Time: [/cyan][bold white]{datluna['time']} ¦ Unix:{datluna['unix_time']} ¦ {datluna['unix_simple']}[/bold white]\n[cyan]Luna current distance relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_pos_vect_rel_EMB'])/1000} -km-[bold white]\n[cyan]Luna current velocity relative EMB: [/cyan][bold white]{vectors.magn_vect(datluna['luna_vel_vect_rel_EMB'])/1000} -km/s-[/bold white]\n\n[yellow]Relative Earth true center -Geocenter-: [/yellow]\n[cyan]Luna current distance relative Geocenter: [/cyan][bold white]{vectors.magn_vect(datluna['moon_geo_pos_vect'])/1000} -km-[/bold white]\n[cyan]Luna current velocity relative Geocenter: [/cyan][bold white]{vectors.magn_vect(datluna['moon_geo_vel_vect'])/1000} -km/s-[/bold white]\n\n[yellow]current 'Phase'° degrees -emphasis on phase- and illumination element k.[/yellow]\n[cyan]Phase: [/cyan][bold white]{datluna['phase_deg']}°[/bold white]\n[cyan]Illumination element k and percentage k%: [/cyan][bold white]{datluna['face']} ¦ {datluna['face_perc']}%[/bold white]\n\n[cyan]Current Face: [/cyan][bold white]{ctx.obj['asho'].lunaface()}\n\n\n\n[yellow]Access the osculating elements through the SDK part of astlohorizons class Asho[/yellow]''')
 
 
 
