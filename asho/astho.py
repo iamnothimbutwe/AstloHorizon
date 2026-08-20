@@ -10,12 +10,14 @@ from collections.abc import Iterable
 from importlib import resources
 import time as ti
 import sys
+import json
 
 console = Console()
 
 try:
     #import astlo
     from astlo import Vectors,Contin,__version__
+    from astlo.np_encoder import NumpyEncoder
     from packaging import version
 
     required_version = version.parse("v10.350.500")
@@ -51,6 +53,7 @@ except ModuleNotFoundError:
 
 vectors = Vectors()
 contin = Contin()
+np_enc = NumpyEncoder()
 
 
 
@@ -74,6 +77,7 @@ class Asho:
 
         datatxt = resources.files('asho')
         self.settings = datatxt / 'settings.txt'
+        self.talk = datatxt / 'astlo_talk.txt'
 
 
 
@@ -115,10 +119,12 @@ class Asho:
 
             pos_magn = vectors.magn_vect(ls_pos)
             vel_magn = vectors.magn_vect(ls_vel)
+            pos_vect_tolist = np_enc.default(pos_vect)
+            vel_vect_tolist = np_enc.default(vel_vect)
 
 
 
-            return {'pos_vect':pos_vect,'vel_vect':vel_vect,'vel_magn':vel_magn,'pos_magn':pos_magn,'units':'km and km/s','name':name,'frame':'SSB','time':time,'unix_time':unix_time,'unix_time_simple':unix_time_simple}
+            return {'pos_vect':pos_vect,'vel_vect':vel_vect,'vel_magn':vel_magn,'pos_magn':pos_magn,'units':'km and km/s','name':name,'frame':'SSB','time':time,'unix_time':unix_time,'unix_time_simple':unix_time_simple,'pos_vect_tolist':pos_vect_tolist,'vel_vect_tolist':vel_vect_tolist}
 
         if name and relative:
             
@@ -168,9 +174,12 @@ class Asho:
             pos_magn_3 = vectors.magn_vect(ls_pos_3)
             vel_magn_3 = vectors.magn_vect(ls_vel_3)
 
+            pos_vect_tolist = np_enc.default(pos_vect)
+            vel_vect_tolist = np_enc.default(vel_vect)
 
 
-            return {'pos_vect':pos_vect,'vel_vect':vel_vect,'pos_magn':pos_magn,'vel_magn':vel_magn,'pos_vect_obje':pos_obje,'vel_vect_obje':vel_obje,'vel_obje_magn':vel_magn_2,'pos_obje_magn':pos_magn_2,'pos_vect_rela':pos_rela,'vel_vect_rela':vel_rela,'pos_magn_rela':pos_magn_3,'vel_magn_rela':vel_magn_3,'frame':f'pos_vect+magnitude and vel_vect+magnitude relative {rela} others variables relative SSB','units':'km and km/s','exp':f'{obje} as 1st argument relative {rela} as 2nd argument','time':time,'frame':'SSB','name':name,'relative':relative,'exp2':'if earth-moon system = True, the frame is relative the EMB. correct the vectors to get the true geocentric states.','time':time,'unix_time':unix_time,'unix_time_simple':unix_time_simple}
+
+            return {'pos_vect':pos_vect,'vel_vect':vel_vect,'pos_magn':pos_magn,'vel_magn':vel_magn,'pos_vect_obje':pos_obje,'vel_vect_obje':vel_obje,'vel_obje_magn':vel_magn_2,'pos_obje_magn':pos_magn_2,'pos_vect_rela':pos_rela,'vel_vect_rela':vel_rela,'pos_magn_rela':pos_magn_3,'vel_magn_rela':vel_magn_3,'frame':f'pos_vect+magnitude and vel_vect+magnitude relative {rela} others variables relative SSB','units':'km and km/s','exp':f'{obje} as 1st argument relative {rela} as 2nd argument','time':time,'frame':'SSB','name':name,'relative':relative,'exp2':'if earth-moon system = True, the frame is relative the EMB. correct the vectors to get the true geocentric states.','time':time,'unix_time':unix_time,'unix_time_simple':unix_time_simple,'pos_vect_tolist':pos_vect_tolist,'vel_vect_tolist':vel_vect_tolist}
 
 
 
@@ -331,5 +340,44 @@ class Asho:
 
 
 
+        
+
+    def astlo_talk(self,name: str=None,moon=None):
+        '''the method that allows astlohorizon and astlo to talk with each other. refurns the state vectors of the object name passed. relative SSB. if name equals luna or moon, the luna method return object will be returned. This allows real time topocentric intergration while astlo uses the real-time + one hour for rungekutta default in the topocentric intergration class'''
+
+        if name==None and moon==None:
+            return 'name cannot be none'
+
+        if name and moon:
+            return 'use the moon argument soleley or the name argument solely but not both at the same time'
+
+        if name:
+            name = name.upper()
+        if name=='MOON' or name=='LUNA' or name=='LUNAR':
+            return 'if the moon states are needed, use the moon argument.'
+
+        if moon and name==None:            
+            object_states = self.luna()
+            talk_lst = [object_states['luna_pos_vect_rel_EMB'],object_states['luna_vel_vect_rel_EMB'],object_states['moon_geo_pos_vect'],object_states['moon_geo_vel_vect']]
+            obj_name = object_states['name'].upper()
+            explanation = 'the list contains 4 items. index 0 and 1 contain the pos amd vel vectors relative EMB while index 2 and 3 contain the pos and vel states relative geocenter respectively.'
+
+            return {'states_list':talk_lst,'name':obj_name,'explanation':explanation,'time_unix':object_states['unix_time'],'time_simple':object_states['unix_simple'],'units':'m and m/s'}
+
+        else:
+            object_states = self.skysolsys(name)
+            earth_states_SSB = self.skysolsys('earth')#Topocentric mwthod in astlo requires the geocentric states..therefore if name is not earth, it willbreturn earth states plus the object states relative SSB and if name is earth, then earth_states key value will be None
+
+            talk_lst = [object_states['pos_vect_tolist'],object_states['vel_vect_tolist']] #changed from numpy array to lists..
+            explanation = f'the list contains the state vectors for {object_states['name']} relative the SSB'
+
+            return {'states_list':talk_lst,'name':object_states['name'].upper(),'explanation':explanation,'time_unix':object_states['unix_time'],'time_simple':object_states['unix_time_simple'],'earth_states':earth_states_SSB['pos_vect_tolist'] if name!='EARTH' else f'None because {name} was passed as the object name','units':'km and km/s'}
+            
+
+       # with open(self.talk,'w') as file: #always overwrite
+       #     for i in object_states:
+        #        talk_lst.append(i)
+       #     data = file.write(f'{}')
 
 
+##how do i get the state vectors for today whole day? in terms of hours...through the de440.bsp .....Use a while loop so that it runs in the background but skeeps after one hour and alerts if asleep..then ill write an external script that utilizes that while loop with this astlo_talk method.
